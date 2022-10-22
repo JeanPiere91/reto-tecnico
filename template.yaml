@@ -1,0 +1,77 @@
+
+  
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Reto tecnico
+Globals:
+  Function:
+    Timeout: 600
+    Runtime: nodejs14.x
+    MemorySize: 1024
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        MYSQL_HOST: xxxxxxx
+        MYSQL_DATABASE: indra
+        MYSQL_USER: admin
+        MYSQL_PASSWORD: xxxxxx
+        MYSQL_CONNECTION_LIMIT: 10
+        MYSQL_QUEUE_LIMIT: 10
+  Api:
+    Cors:
+      AllowMethods: "'POST, GET, OPTIONS'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+      AllowCredentials: false
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+Resources:
+  obtenerVehiculoPorId:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./functions
+      Handler: app.obtenerVehiculoPorId
+      Events:
+        obtenerPersonaPorId:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref IndraApi
+            Path: /obtener-vehiculo-por-id
+            Method: get
+  guardarVehiculo:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./functions
+      Handler: app.guardarVehiculo
+      Events:
+        guardarPersona:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref IndraApi
+            Path: /guardar-vehiculo
+            Method: post
+  paginarVehiculos:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./functions
+      Handler: app.paginarVehiculos
+      Events:
+        paginarPersonas:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref IndraApi
+            Path: /paginar-vehiculos
+            Method: get
+  IndraApi:
+      Type: AWS::Serverless::Api
+      Properties:
+        StageName: !Ref Stage
+        Auth:
+          ApiKeyRequired: false
+Outputs:
+  AgenciaApi:
+    Description: "API Gateway endpoint URL for ${Stage} stage"
+    Value: !Sub "https://${IndraApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}"

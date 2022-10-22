@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Reto tecnico
+servers:
+- url: '{server}/dev'
+  variables:
+    server:
+      default: https://nb5ghd88r3.execute-api.us-east-1.amazonaws.com
+tags:
+- name: swapi
+  description: Operaciones swapi
+- name: mysql
+  description: Operaciones mysql
+paths:
+  "/obtener-vehiculo-por-id":
+    get:
+      tags:
+      - swapi
+      summary: Obtener vehiculo swapi
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Id de vehiculo
+      responses:
+        '200':    # status code
+          description: Datos encontrados correctamente
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/swapiResponse"
+        '400':
+          description: Error parametros de envio invalidos.
+        '500':
+          description: Error del Servidor
+  "/guardar-vehiculo":
+    post:
+      tags:
+      - mysql
+      summary: Guardar vehiculo mysql
+      requestBody:
+        description: Json Solicitud
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/vehiculoRequest"
+      responses:
+        '200':    # status code
+          description: Datos almacenados correctamente
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/vehiculoResponse"
+        '400':
+          description: Error parametros de envio invalidos.
+        '500':
+          description: Error del Servidor
+  "/paginar-vehiculos":
+    get:
+      tags:
+      - mysql
+      summary: Paginar vehiculos mysql
+      parameters:
+        - in: query
+          name: pagina
+          schema:
+            type: integer
+          required: true
+          description: Página actual
+        - in: query
+          name: limite
+          schema:
+            type: integer
+          required: true
+          description: Límite de registros
+      responses:
+        '200':    # status code
+          description: Datos encontrados correctamente
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/vehiculosResponse"
+        '400':
+          description: Error parametros de envio invalidos.
+        '500':
+          description: Error del Servidor
+components:
+  schemas:
+    swapiResponse:
+      type: object
+      properties:
+        capacidadCarga:
+          type: string
+          format: string
+          example: 40000
+        tripulacion:
+          type: string
+          format: string
+          example: 40
+        longitud:
+          type: string
+          format: string
+          example: 40.5
+        fabricante:
+          type: string
+          format: string
+          example: Bayerische Motoren Werke
+        modelo:
+          type: string
+          format: string
+          example: BMW 118i
+        nombre:
+          type: string
+          format: string
+          example: BMW
+        pasajeros:
+          type: string
+          format: string
+          example: 5
+        claseVehiculo:
+          type: string
+          format: string
+          example: Gama Alta
+    vehiculoRequest:
+        type: object
+        properties:
+          capacidadCarga:
+            type: string
+            format: string
+            example: 40000
+          tripulacion:
+            type: string
+            format: string
+            example: 40
+          longitud:
+            type: string
+            format: string
+            example: 40.5
+          fabricante:
+            type: string
+            format: string
+            example: Bayerische Motoren Werke
+          modelo:
+            type: string
+            format: string
+            example: BMW 118i
+          nombre:
+            type: string
+            format: string
+            example: BMW
+          pasajeros:
+            type: string
+            format: string
+            example: 5
+          claseVehiculo:
+            type: string
+            format: string
+            example: Gama Alta
+    vehiculoResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: string
+          example: 40f9bdfd-b430-11ec-b60e-02f757bd4c9b
+        message:
+          type: string
+          format: string
+          example: Vehiculo Registrado
+        code:
+          type: string
+          format: string
+          example: 200
+    vehiculosResponse:
+        type: object
+        properties:
+          registros:
+            type: integer
+            format: integer
+            example: 10
+          pagina:
+            type: integer
+            format: integer
+            example: 0
+          colaboradores:
+            type: array
+            items:
+              type: object
+              properties:
+                capacidadCarga:
+                  type: string
+                  format: string
+                  example: 40000
+                tripulacion:
+                  type: string
+                  format: string
+                  example: 40
+                longitud:
+                  type: string
+                  format: string
+                  example: 40.5
+                fabricante:
+                  type: string
+                  format: string
+                  example: Bayerische Motoren Werke
+                modelo:
+                  type: string
+                  format: string
+                  example: BMW 118i
+                nombre:
+                  type: string
+                  format: string
+                  example: BMW
+                pasajeros:
+                  type: string
+                  format: string
+                  example: 5
+                claseVehiculo:
+                  type: string
+                  format: string
+                  example: Gama Alta

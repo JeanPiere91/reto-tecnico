@@ -32,8 +32,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/swapiResponse"
-        '400':
-          description: Error parametros de envio invalidos.
+        '204':
+          description: Vehiculo no encontrado.
         '500':
           description: Error del Servidor
   "/guardar-vehiculo":
